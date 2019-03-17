@@ -229,6 +229,542 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/17/残差网络卷积模型/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Amo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Amo' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/17/残差网络卷积模型/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-17T16:57:47+08:00">
+                2019-03-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="ResNet"><a href="#ResNet" class="headerlink" title="ResNet"></a>ResNet</h2><p>ResNet是由残差块所构建。</p>
+<h4 id="残差块："><a href="#残差块：" class="headerlink" title="残差块："></a>残差块：</h4><p>下面是一个普通的神经网络块的传输：</p>
+<p><img src="https://img-blog.csdn.net/20171114153936535?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvS29hbGFfVHJlZQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="image"></p>
+<p>其前向传播的计算步骤为：</p>
+<p><img src="/2019/03/17/残差网络卷积模型/github/blog/source/_posts/%E6%AE%8B%E5%B7%AE%E7%BD%91%E7%BB%9C%E5%8D%B7%E7%A7%AF%E6%A8%A1%E5%9E%8B/1.png" alt="image"></p>
+<p>而ResNet块则将其传播过程增加了一个从a[l]直接到z[l+2]的连接，将其称之为“short cut”或者“skip connection”：</p>
+<p><img src="https://img-blog.csdn.net/20171114154922501?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvS29hbGFfVHJlZQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="image"></p>
+<p>也就是前向传播公式的最后一个步骤变为：a[l+2]=g(z[l+2]+a[l])</p>
+<p>增加“short cut”后，成为残差块的网络结构：</p>
+<p><img src="https://img-blog.csdn.net/20171114155305863?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvS29hbGFfVHJlZQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="image"></p>
+<h4 id="Residual-Network："><a href="#Residual-Network：" class="headerlink" title="Residual Network："></a>Residual Network：</h4><p>多个<strong>残差块</strong>堆积起来构成ResNet网络结构，其结构如下：</p>
+<p><img src="https://img-blog.csdn.net/20171114155750281?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvS29hbGFfVHJlZQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="image"></p>
+<p>没有“short cut”的普通神经网络和ResNet的误差曲线：</p>
+<p><img src="https://img-blog.csdn.net/20171114160023551?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvS29hbGFfVHJlZQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="image"></p>
+<ul>
+<li>在没有残差的普通神经网络中，训练的误差实际上是随着网络层数的加深，先减小再增加；</li>
+<li>在有残差的ResNet中，即使网络再深，训练误差都会随着网络层数的加深逐渐减小。</li>
+</ul>
+<p>ResNet对于中间的激活函数来说，有助于能够达到更深的网络，解决梯度消失和梯度爆炸的问题。</p>
+<blockquote>
+<p>skip-connections 可以通过减缓衰减速度，使梯度相关性和之前比起来变大，缓解梯度消失问题。</p>
+</blockquote>
+<h4 id="ResNet表现好的原因"><a href="#ResNet表现好的原因" class="headerlink" title="ResNet表现好的原因"></a>ResNet表现好的原因</h4><p>假设有个比较大的神经网络，输入为x，输出为a[l]。如果我们想增加网络的深度，这里再给网络增加一个残差块：</p>
+<p><img src="https://img-blog.csdn.net/20171114161954485?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvS29hbGFfVHJlZQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="image"></p>
+<p>假设网络中均使用Relu激活函数，所以最后的输出a⩾0。这里我们给出a[l+2]的值：</p>
+<p>a[l+2]=g(z[l+2]+a[l])=g(W[l+2]a[l+1]+b[l+2]+a[l])</p>
+<p>如果使用L2正则化或者权重衰减，会压缩W和b的值，如果W[l+2]=0W[l+2]=0同时b[l+2]=0b[l+2]=0，那么上式就变成：</p>
+<p>a[l+2]=g(z[l+2]+a[l])=g(a[l])=relu(a[l])=a[l]</p>
+<p>所以从上面的结果我们可以看出，对于残差块来学习上面这个恒等函数是很容易的。所以在增加了残差块后更深的网络的性能也并不逊色于没有增加残差块简单的网络。所以尽管增加了网络的深度，但是并不会影响网络的性能。同时如果增加的网络结构能够学习到一些有用的信息，那么就会提升网络的性能。</p>
+<p>同时由于结构a[l+2]=g(z[l+2]+a[l])a[l+2]=g(z[l+2]+a[l])，ResNet在设计中使用了很多相同的卷积，以保持z[l+2]z[l+2]和a[l]a[l]的维度相同。</p>
+<p>将普通深度神经网络变为ResNet：</p>
+<p><img src="https://img-blog.csdn.net/20171114164430989?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvS29hbGFfVHJlZQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast" alt="image"></p>
+<p>在两个相同的卷积层之间增加“skip connection”。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/16/深度卷积模型/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Amo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Amo' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/16/深度卷积模型/" itemprop="url">未命名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-16T11:42:21+08:00">
+                2019-03-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="经典的卷积网络"><a href="#经典的卷积网络" class="headerlink" title="经典的卷积网络"></a>经典的卷积网络</h2><p><img src="/2019/03/16/深度卷积模型/Users/Amo/Pictures/cnn_note2/4.jpg" alt="image"></p>
+<p>介绍几种经典的卷积神经网络结构，分别是LeNet、AlexNet、VGGNet。</p>
+<h4 id="1-LeNet-5："><a href="#1-LeNet-5：" class="headerlink" title="1.LeNet-5："></a>1.LeNet-5：</h4><p>LeNet-5主要是针对灰度设计的，所以其输入较小，为32×32×1，其结构如下：</p>
+<p><img src="/2019/03/16/深度卷积模型/Users/Amo/Pictures/cnn_note2/1.png" alt="image"></p>
+<p><strong>F6层：</strong> F6层是全连接层。F6层有84个节点，对应于一个7x12的比特图，-1表示白色，1表示黑色，这样每个符号的比特图的黑白色就对应于一个编码。</p>
+<p><strong>Output层：</strong> Output层也是全连接层，共有10个节点，分别代表数字0到9，且如果节点i的值为0，则网络识别的结果是数字i。采用的是径向基函数（RBF）的网络连接方式。假设x是上一层的输入，y是RBF的输出，则RBF输出的计算方式是：</p>
+<p><img src="/2019/03/16/深度卷积模型/Users/Amo/Pictures/cnn_note2/2.png" alt="image"></p>
+<p>上式w_ij 的值由i的比特图编码确定，i从0到9，j取值从0到7*12-1。RBF输出的值越接近于0，则越接近于i，即越接近于i的ASCII编码图，表示当前网络输入的识别结果是字符i。该层有84x10=840个参数和连接。</p>
+<p>在LetNet中，存在的经典模式：</p>
+<ul>
+<li>随着网络的深度增加，图像的大小在缩小，与此同时，通道的数量却在增加；</li>
+<li>每个卷积层后面接一个池化层。</li>
+</ul>
+<p><strong>LeNet相对于传统DNN的优势：</strong></p>
+<ul>
+<li>sparse interactions </li>
+<li>parameter sharing </li>
+<li>equivariant respections</li>
+</ul>
+<p><strong>参考文献</strong></p>
+<p>《Gradient-Based Learning Applied to Document Recognition》</p>
+<h4 id="2-AlexNet："><a href="#2-AlexNet：" class="headerlink" title="2.AlexNet："></a>2.AlexNet：</h4><p>AlexNet直接对彩色的大图片进行处理，其结构如下：</p>
+<p><img src="/2019/03/16/深度卷积模型/Users/Amo/Pictures/cnn_note2/3.png" alt="image"></p>
+<ul>
+<li>与LeNet相似，但网络结构更大，参数更多，表现更加出色；</li>
+<li>使用了Relu；</li>
+<li>使用了多个GPUs；</li>
+<li>LRN（后来发现用处不大，丢弃了）；</li>
+<li>Overlapping Pooling 带交叠的Pooling，指Pooling单元在总结提取特征的时候，其输入会受到相邻pooling单元的输入影响，也就是提取出来的结果可能是有重复的(对max pooling而言)。在训练阶段有避免过拟合的作用。</li>
+</ul>
+<p><strong>一些细节</strong></p>
+<ol>
+<li>ReLU、双GPU运算：提高训练速度。（应用于所有卷积层和全连接层）</li>
+<li>重叠pool池化层：提高精度，不容易产生过度拟合。（应用在第一层，第二层，第五层后面）</li>
+<li>局部响应归一化层(LRN)：提高精度。（应用在第一层和第二层后面）</li>
+<li>Dropout：减少过度拟合。（应用在前两个全连接层）</li>
+<li>训练采用的是随机梯度下降 (stochastic gradient descent)，每批图像大小为128，动力为0.9，权重衰减为0.005。</li>
+<li>用一个均值为0、标准差为0.01的高斯分布初始化了每一层的权重。我们用常数1初始化了第二、第四和第五个卷积层以及全连接隐层的神经元偏差（该初始化通过提供带正输入的ReLU来加速学习的初级阶段）。我们在其余层用常数0初始化神经元偏差。</li>
+</ol>
+<p>AlexNet使得深度学习在计算机视觉方面受到极大的重视。</p>
+<p><strong>参考文献</strong></p>
+<p><a href="https://blog.csdn.net/hongbin_xu/article/details/80271291" target="_blank" rel="noopener">《ImageNet Classification with Deep Convolutional Neural Networks》</a></p>
+<h4 id="3-VGG-16"><a href="#3-VGG-16" class="headerlink" title="3.VGG-16"></a>3.VGG-16</h4><p>VGG卷积层和池化层均具有相同的卷积核大小，都使用3×3，stride=1,SAME的卷积和2×2，stride=2的池化。其结构如下：</p>
+<p><img src="/2019/03/16/深度卷积模型/Users/Amo/Pictures/cnn_note2/5.png" alt="image"></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/16/卷积神经网络基础/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Amo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Amo' Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/16/卷积神经网络基础/" itemprop="url">cnn_note1</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-16T11:23:53+08:00">
+                2019-03-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="1-计算机视觉"><a href="#1-计算机视觉" class="headerlink" title="1.计算机视觉"></a>1.计算机视觉</h2><p>计算机视觉（Computer Vision）包含很多不同类别的问题，如图片分类、目标检测、图片风格迁移等等。</p>
+<p><img src="/2019/03/16/卷积神经网络基础/github\blog\source\_posts\cnn-note1\1.png" alt="image"></p>
+<p>对于小尺寸的图片问题，也许我们用深度神经网络的结构可以较为简单的解决一定的问题。但是当应用在大尺寸的图片上，输入规模将变得十分庞大，使用神经网络将会有非常多的参数需要去学习，这个时候神经网络就不再适用。</p>
+<p>卷积神经网络在计算机视觉问题上是一个非常好的网络结构。</p>
+<h2 id="2-边缘检测示例"><a href="#2-边缘检测示例" class="headerlink" title="2.边缘检测示例"></a>2.边缘检测示例</h2><p>卷积运算是卷积神经网络的基本组成部分。下面以边缘检测的例子来介绍卷积运算。</p>
+<p>所谓边缘检测，在下面的图中，分别通过垂直边缘检测和水平边缘检测得到不同的结果：</p>
+<p><strong>垂直边缘检测：</strong></p>
+<p>假设对于一个 6×6大小的图片（以数字表示），以及一个3×3大小的 filter（卷积核）进行卷积运算，以“∗”符号表示。图片和垂直边缘检测器分别如左和中矩阵所示：</p>
+<p><img src="/2019/03/16/卷积神经网络基础/github\blog\source\_posts\cnn-note1\2.png" alt="image"></p>
+<p><strong>filter</strong> 不断地和其大小相同的部分做对应元素的乘法运算并求和，最终得到的数字相当于新图片的一个像素值，如右矩阵所示，最终得到一个4×4大小的图片。</p>
+<p><strong>边缘检测的原理：</strong></p>
+<p>以一个有一条垂直边缘线的简单图片来说明。通过垂直边缘<strong>filter</strong>我们得到的最终结果图片可以明显地将边缘和非边缘区分出来：</p>
+<p><img src="/2019/03/16/卷积神经网络基础/github\blog\source\_posts\cnn-note1\3.png" alt="image"></p>
+<p>卷积运算提供了一个方便的方法来检测图像中的边缘，成为卷积神经网络中重要的一部分。</p>
+<p>对于复杂的图片，我们可以直接将filter中的数字直接看作是需要学习的参数，其可以学习到对于图片检测相比上面filter更好的更复杂的filter，如相对于水平和垂直检测器，我们训练的<strong>filter</strong>参数也许可以知道不同角度的边缘。</p>
+<p>通过卷积运算，在卷积神经网络中通过反向传播算法，可以学习到相应于目标结果的filter，将其应用于整个图片，输出其提取到的所有有用的特征。</p>
+<p><img src="/2019/03/16/卷积神经网络基础/github\blog\source\_posts\cnn-note1\4.png" alt="image"></p>
+<p><strong>卷积和互相关：</strong></p>
+<p>在数学定义上，矩阵的卷积（convolution）操作为首先将卷积核同时在水平和垂直方向上进行翻转，构成一个卷积核的镜像，然后使用该镜像再和前面的矩阵进行移动相乘求和操作。如下面例子所示：</p>
+<p><img src="/2019/03/16/卷积神经网络基础/github\blog\source\_posts\cnn-note1\5.png" alt="image"></p>
+<p>在深度学习中，我们称为的卷积运算实则没有卷积核变换为镜像的这一步操作，因为在权重学习的角度，变换是没有必要的。深度学习的卷积操作在数学上准确度来说称为<strong>互相关</strong>（cross-correlation）。</p>
+<h2 id="3-Padding"><a href="#3-Padding" class="headerlink" title="3.Padding"></a>3.Padding</h2><p><strong>没有Padding的缺点：</strong></p>
+<ul>
+<li><p>每次卷积操作，图片会缩小；</p>
+<p>就前面的例子来说，6×6 大小的图片，经过3×3大小的filter，缩小成了4×4大小图片：n×n –&gt; (n−f+1)×(n−f+1)</p>
+</li>
+<li><p>角落和边缘位置的像素进行卷积运算的次数少，可能会丢失有用信息。</p>
+</li>
+</ul>
+<p><strong>加Padding：</strong></p>
+<p>为了解决上面的两个缺点，我们在进行卷积运算前为图片加padding，包围角落和边缘的像素，使得通过filter的卷积运算后，图片大小不变，也不会丢失角落和边沿的信息。</p>
+<p><img src="/2019/03/16/卷积神经网络基础/github\blog\source\_posts\cnn-note1\6.png" alt="image"></p>
+<p>以p表示 Padding 的值，则输入n×n大小的图片，最终得到的图片大小为(n+2p−f+1)×(n+2p−f+1)，为使图片大小保持不变，需根据filter的大小调整p的值。</p>
+<p><strong>Valid / Same 卷积：</strong></p>
+<ul>
+<li><strong>Valid：no padding: </strong>（n×n –&gt; (n−f+1)×(n−f+1)）</li>
+<li><strong>Same：</strong>padding，输出与输入图片大小相同，（p=(f−1)/2）。在计算机视觉中，一般来说padding的值为奇数（因为filter一般为奇数）</li>
+</ul>
+<h2 id="4-卷积步长（stride）"><a href="#4-卷积步长（stride）" class="headerlink" title="4. 卷积步长（stride）"></a>4. 卷积步长（stride）</h2><p>卷积的步长是构建卷积神经网络的一个基本的操作。</p>
+<p>如前面的例子中，我们使用的stride=1，每次的卷积运算以1个步长进行移动。下面是 stride=2 时对图片进行卷积的结果：</p>
+<p><img src="/2019/03/16/卷积神经网络基础/github\blog\source\_posts\cnn-note1\7.png" alt="image"></p>
+<p>以s表示stride的大小，那么在进行卷积运算后，图片的变化为：n×n –&gt; ⌊(n+2p−f)/s+1⌋×⌊(n+2p−f)/s+1⌋。</p>
+<p>注意，在当padding≠1padding≠1时，若移动的窗口落在图片外面时，则不要再进行相乘的操作，丢弃边缘的数值信息，所以输出图片的最终维度为<strong>向下取整</strong>。</p>
+<h2 id="5-立体卷积"><a href="#5-立体卷积" class="headerlink" title="5. 立体卷积"></a>5. 立体卷积</h2><p><strong>卷积核的通道数：</strong></p>
+<p>对于灰色图像中，卷积核和图像均是二维的。而应用于彩色图像中，因为图片有R、G、B三个颜色通道，所以此时的卷积核应为三维卷积核。</p>
+<p>卷积核的第三个维度需要与进行卷积运算的图片的通道数相同。</p>
+<p>单个卷积核应用于图片时，提取图片特定的特征，不同的卷积核提取不同的特征。如两个大小均为3×3×3的卷积核分别提取图片的垂直边缘和水平边缘。</p>
+<p><img src="/2019/03/16/卷积神经网络基础/github\blog\source\_posts\cnn-note1\8.png" alt="image"></p>
+<p>由图可知，最终提取到彩色图片的垂直特征图和水平特征图，得到有2个通道的4×4大小的特征图片。</p>
+<p><strong>Summary：</strong></p>
+<p>图片：n×n×nc∗f×f×nc—&gt;n−f+1×n−f+1×nc′</p>
+<h2 id="6-简单卷积网络"><a href="#6-简单卷积网络" class="headerlink" title="6.简单卷积网络"></a>6.简单卷积网络</h2><p><strong>单层卷积网络的例子：</strong></p>
+<p>和普通的神经网络单层前向传播的过程类似，卷积神经网络也是一个先由输入和权重及偏置做线性运算，然后得到的结果输入一个激活函数中，得到最终的输出：</p>
+<p><img src="/2019/03/16/卷积神经网络基础/github\blog\source\_posts\cnn-note1\9.jpg" alt="image"></p>
+<p>不同点是在卷积神经网络中，权重和输入进行的是卷积运算。</p>
+<p><strong>单层卷积的参数个数：</strong></p>
+<p>在一个卷积层中，如果我们有10个3×3×3大小的卷积核，那么加上每个卷积核对应的偏置，则对于一个卷积层，我们共有的参数个数为：<br><strong>(3×3×3+1)×10=280</strong></p>
+<p>无论图片大小是多少，该例子中的卷积层参数个数一直都是280个，相对于普通的神经网络，卷积神经网络的参数个数要少很多。</p>
+<p><strong>标记总结：</strong></p>
+<p><img src="/2019/03/16/卷积神经网络基础/github\blog\source\_posts\cnn-note1\10.jpg" alt="image"></p>
+<p><strong>简单卷积网络实例：</strong></p>
+<p>多层卷积构成卷积神经网络，下面是一个卷积神经网络的例子</p>
+<p><img src="/2019/03/16/卷积神经网络基础/github\blog\source\_posts\cnn-note1\11.png" alt="image"></p>
+<p><strong>卷积网络层的类型：</strong></p>
+<ul>
+<li>卷积层（Convolution），Conv；</li>
+<li>池化层（Pooling），Pool；</li>
+<li>全连接层（Fully connected）：Fc；</li>
+</ul>
+<h2 id="7-池化层"><a href="#7-池化层" class="headerlink" title="7.池化层"></a>7.池化层</h2><p><strong>最大池化（Max pooling）：</strong></p>
+<p>最大池化是对前一层得到的特征图进行池化减小，仅由当前小区域内的最大值来代表最终池化后的值。</p>
+<p><img src="/2019/03/16/卷积神经网络基础/github\blog\source\_posts\cnn-note1\12.png" alt="image"></p>
+<p>在最大池化中，有一组超参数需要进行调整，其中，f表示池化的大小，s表示步长。</p>
+<ul>
+<li>池化前：n×n;</li>
+<li>池化后：⌊n+2p−fs+1⌋×⌊n+2p−fs+1⌋。</li>
+</ul>
+<p><strong>平均池化（Average pooling）：</strong></p>
+<p>平均池化与最大池化唯一不同的是其选取的是小区域内的均值来代表该区域内的值。</p>
+<p><strong>池化的超参p（Padding）很少使用。</strong></p>
+<p><strong>池化层的作用</strong></p>
+<blockquote>
+<p>池化层通过求局部平均<strong>降低特征图的分辨率</strong>，并且降低了输出对平移和形变的敏感度。——《Gradient-Based Learning Applied to Document Recognition》</p>
+</blockquote>
+<h2 id="8-卷积神经网络示例"><a href="#8-卷积神经网络示例" class="headerlink" title="8.卷积神经网络示例"></a>8.卷积神经网络示例</h2><p>这里以 <strong>LeNet-5</strong> 为例，给出一个完整的卷积神经网络。</p>
+<p><img src="/2019/03/16/卷积神经网络基础/github\blog\source\_posts\cnn-note1\12.png" alt="image"></p>
+<p><strong>构建深度卷积的模式：</strong></p>
+<ul>
+<li>随着网络的深入，提取的特征图片大小将会逐渐减小，但同时通道数量应随之增加；</li>
+<li>Conv——Pool——Conv——Pool——Fc——Fc——Fc——softmax。</li>
+</ul>
+<p>对于卷积卷积神经网络的参数：</p>
+<ul>
+<li>在卷积层，仅有少量的参数；</li>
+<li>在池化层，没有参数；</li>
+<li>在全连接层，存在大量的参数。</li>
+</ul>
+<p><strong>卷积网络的优点：</strong></p>
+<ul>
+<li><strong>参数共享：</strong> 一个特征检测器（filter）对图片的一部分有用的同时也有可能对图片的另外一部分有用。</li>
+<li><strong>连接的稀疏性：</strong> 在每一层中，每个输出值只取决于少量的输入。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/07/The-first-blog/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -509,7 +1045,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
